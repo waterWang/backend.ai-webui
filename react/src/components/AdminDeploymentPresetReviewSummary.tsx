@@ -116,6 +116,11 @@ const PresetReviewSummary: React.FC<PresetReviewSummaryProps> = ({
         title={t('adminDeploymentPreset.step.BasicInfo')}
         extra={editLink(0, 'preset-form-card-basic')}
       >
+        {/* Field order below mirrors the Basic Info step's actual input
+            order (name → description → runtime → runtime params → service
+            configuration → health check → pre-start actions → image), not
+            the order fields were originally added to this summary — see
+            AdminDeploymentPresetSettingPageContent.tsx's Basic Info card. */}
         <MetadataList columns={1}>
           <MetadataListItem label={t('adminDeploymentPreset.Name')}>
             <Text weight="semibold">{values.name || '-'}</Text>
@@ -127,19 +132,6 @@ const PresetReviewSummary: React.FC<PresetReviewSummaryProps> = ({
           )}
           <MetadataListItem label={t('adminDeploymentPreset.Runtime')}>
             {runtimeName || '-'}
-          </MetadataListItem>
-          <MetadataListItem label={t('adminDeploymentPreset.Image')}>
-            {imageReference ? (
-              <BAICopyableText
-                type="code"
-                style={{ wordBreak: 'break-all' }}
-                copyLabel={t('sourceCodeViewer.Copy')}
-              >
-                {imageReference}
-              </BAICopyableText>
-            ) : (
-              '-'
-            )}
           </MetadataListItem>
           {runtimeParamRows.length > 0 && (
             <MetadataListItem label={t('modelService.RuntimeParamTitle')}>
@@ -157,9 +149,9 @@ const PresetReviewSummary: React.FC<PresetReviewSummaryProps> = ({
             const svc = values.modelDefinition?.models?.[0]?.service;
             return (
               <>
-                {svc?.port != null && (
-                  <MetadataListItem label={t('modelService.Port')}>
-                    {svc.port}
+                {svc?.shell && (
+                  <MetadataListItem label={t('modelService.Shell')}>
+                    <Code>{svc.shell}</Code>
                   </MetadataListItem>
                 )}
                 {svc?.startCommand && (
@@ -169,20 +161,9 @@ const PresetReviewSummary: React.FC<PresetReviewSummaryProps> = ({
                     </SourceCodeView>
                   </MetadataListItem>
                 )}
-                {svc?.shell && (
-                  <MetadataListItem label={t('modelService.Shell')}>
-                    <Code>{svc.shell}</Code>
-                  </MetadataListItem>
-                )}
-                {(svc?.preStartActions?.length ?? 0) > 0 && (
-                  <MetadataListItem label={t('modelService.PreStartActions')}>
-                    <BAIFlex direction="column" align="start" gap="xxs">
-                      {svc?.preStartActions?.filter(Boolean).map((a, ai) => (
-                        <Code key={ai} style={{ display: 'block' }}>
-                          {a?.action}: {a?.args || '{}'}
-                        </Code>
-                      ))}
-                    </BAIFlex>
+                {svc?.port != null && (
+                  <MetadataListItem label={t('modelService.Port')}>
+                    {svc.port}
                   </MetadataListItem>
                 )}
                 <MetadataListItem
@@ -250,9 +231,33 @@ const PresetReviewSummary: React.FC<PresetReviewSummaryProps> = ({
                     )}
                   </>
                 )}
+                {(svc?.preStartActions?.length ?? 0) > 0 && (
+                  <MetadataListItem label={t('modelService.PreStartActions')}>
+                    <BAIFlex direction="column" align="start" gap="xxs">
+                      {svc?.preStartActions?.filter(Boolean).map((a, ai) => (
+                        <Code key={ai} style={{ display: 'block' }}>
+                          {a?.action}: {a?.args || '{}'}
+                        </Code>
+                      ))}
+                    </BAIFlex>
+                  </MetadataListItem>
+                )}
               </>
             );
           })()}
+          <MetadataListItem label={t('adminDeploymentPreset.Image')}>
+            {imageReference ? (
+              <BAICopyableText
+                type="code"
+                style={{ wordBreak: 'break-all' }}
+                copyLabel={t('sourceCodeViewer.Copy')}
+              >
+                {imageReference}
+              </BAICopyableText>
+            ) : (
+              '-'
+            )}
+          </MetadataListItem>
         </MetadataList>
       </BAICard>
 
@@ -425,6 +430,13 @@ const PresetReviewSummary: React.FC<PresetReviewSummaryProps> = ({
                       {m.metadata.version}
                     </MetadataListItem>
                   )}
+                  {m.metadata?.license && (
+                    <MetadataListItem
+                      label={t('adminDeploymentPreset.modelDef.License')}
+                    >
+                      {m.metadata.license}
+                    </MetadataListItem>
+                  )}
                   {m.metadata?.description && (
                     <MetadataListItem
                       label={t('adminDeploymentPreset.modelDef.Description')}
@@ -481,13 +493,6 @@ const PresetReviewSummary: React.FC<PresetReviewSummaryProps> = ({
                           />
                         ))}
                       </HStack>
-                    </MetadataListItem>
-                  )}
-                  {m.metadata?.license && (
-                    <MetadataListItem
-                      label={t('adminDeploymentPreset.modelDef.License')}
-                    >
-                      {m.metadata.license}
                     </MetadataListItem>
                   )}
                 </MetadataList>
