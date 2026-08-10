@@ -1310,6 +1310,9 @@ const AdminDeploymentPresetSettingPageContent: React.FC<
                     runtimeVariants={runtimeVariants}
                     errorFieldNames={errorFieldNames}
                     runtimeParamRows={getRuntimeParamReviewRows()}
+                    supportsNullableModelDefinition={
+                      supportsNullableModelDefinition
+                    }
                   />
                 </Suspense>
               )}
