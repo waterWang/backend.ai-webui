@@ -1,6 +1,6 @@
 # E2E Test Coverage Report
 
-> **Last Updated:** 2026-07-27
+> **Last Updated:** 2026-08-10
 > **Router Source:** [`react/src/routes.tsx`](../react/src/routes.tsx)
 > **E2E Root:** [`e2e/`](.)
 >
@@ -12,7 +12,7 @@
 
 **Scope:** Coverage metrics apply only to the routes listed below and do **not** include all entries from `react/src/routes.tsx`. Routes such as `/admin-dashboard` (not yet exposed in menu) and `/ai-agent` (experimental) are currently out of scope.
 
-**Overall (in-scope routes): 309 / 454 features covered (68%)**
+**Overall (in-scope routes): 314 / 459 features covered (68%)**
 
 | Page                     | Route                                  | Features | Covered | Status  |
 | ------------------------ | -------------------------------------- | :------: | :-----: | :-----: |
@@ -49,7 +49,8 @@
 | RBAC Management          | `/rbac`                                |    22    |   21    | 🔶 95%  |
 | Auto Scaling Rule Preset | `/admin-serving?tab=auto-scaling-rule` |    33    |   32    | 🔶 97%  |
 | Deployments              | `/deployments`, `/deployments/:id`     |    16    |   12    | 🔶 75%  |
-| **Total**                |                                        | **470**  | **321** | **68%** |
+| Runtime Variant Preset   | `/admin/deployments?tab=runtime-variant-presets` |    5     |    5    | ✅ 100% |
+| **Total**                |                                        | **475**  | **326** | **69%** |
 
 ---
 
@@ -1155,6 +1156,33 @@
 | Revision rollback / promote from Revision History                                  | ❌     | -                                                                                                                        |
 
 **Coverage: 🔶 12/16 features (4 deferred to backend-surface testing or future work)**
+
+---
+
+### 31. Admin - Runtime Variant Preset Metadata (`/admin/deployments?tab=runtime-variant-presets`)
+
+**Test files:** [`e2e/runtime-variant-preset/preset-ui-metadata.spec.ts`](runtime-variant-preset/preset-ui-metadata.spec.ts)
+
+**Requires:** Superadmin login, `runtime-variant-preset-ui-metadata` feature flag (manager ≥ 26.9.0) — tests skip gracefully on older managers instead of failing.
+**Primary action:** "Create Preset" → `BAIRuntimeVariantPresetSettingModal`
+**Row actions:** Edit → `BAIRuntimeVariantPresetSettingModal`, Delete → `BAIConfirmModalWithInput`
+
+#### Create Preset — Category / Display Name / UI Option
+
+| Feature                                                                    | Status | Test                                                                                          |
+| --------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------- |
+| Create with Category, Display Name, SELECT UI option (add + remove a choice row) | ✅     | `Superadmin can create a preset with Category, Display Name, and a SELECT UI option`            |
+| Create with a SLIDER UI option, values round-trip on reopen                 | ✅     | `Superadmin can create a preset with a SLIDER UI option`                                        |
+| Validation: Slider Minimum and Maximum both required                        | ✅     | `Superadmin cannot save a SLIDER UI option without Minimum/Maximum`                             |
+| Validation: Slider Step must be positive                                    | ✅     | `Superadmin cannot save a SLIDER UI option with a negative Step`                                |
+
+#### Edit Preset
+
+| Feature                                                                     | Status | Test                                                                                             |
+| ---------------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------|
+| Edit round-trip preserves Category, Display Name, and multiple choice rows   | ✅     | `Editing a SELECT preset re-populates category, display name, and every choice row`               |
+
+**Coverage: ✅ 5/5 features**
 
 ---
 
