@@ -474,12 +474,13 @@ const AdminDeploymentPresetSettingPageContent: React.FC<
     selectedRuntimeVariantForServiceConfig,
   );
 
-  // Shared between the two render sites below (Step 1 for nullable-capable
-  // managers, nested in the Model Definition card for legacy managers).
-  // Health Check and Pre-Start Actions have the same constraint as Service
-  // Configuration — all three live inside `PresetModelServiceConfigInput`,
-  // nested inside `PresetModelConfigInput` which requires a real name/
-  // modelPath pre-BA-7210 — so all three move together.
+  // Step 1 render helpers, used only on nullable-capable managers — legacy
+  // managers render these sections themselves inside `ModelConfigItem`
+  // (nested under the Model Definition card), since Health Check and
+  // Pre-Start Actions share Service Configuration's constraint: all three
+  // live inside `PresetModelServiceConfigInput`, nested inside
+  // `PresetModelConfigInput` which requires a real name/modelPath
+  // pre-BA-7210 — so all three move together.
   const renderServiceConfigurationFormItems = () => (
     <ServiceConfigurationFormItems
       namePrefix={['modelDefinition', 'models', 0, 'service']}
