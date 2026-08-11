@@ -1,6 +1,6 @@
 # E2E Test Coverage Report
 
-> **Last Updated:** 2026-07-27
+> **Last Updated:** 2026-08-11
 > **Router Source:** [`react/src/routes.tsx`](../react/src/routes.tsx)
 > **E2E Root:** [`e2e/`](.)
 >
@@ -14,42 +14,43 @@
 
 **Overall (in-scope routes): 309 / 454 features covered (68%)**
 
-| Page                     | Route                                  | Features | Covered | Status  |
-| ------------------------ | -------------------------------------- | :------: | :-----: | :-----: |
-| Authentication           | `/interactive-login`                   |    37    |   35    | 🔶 95%  |
-| Change Password          | `/change-password`                     |    9     |    9    | ✅ 100% |
-| Start Page               | `/start`                               |    8     |    6    | 🔶 75%  |
-| Dashboard                | `/dashboard`                           |    9     |    7    | 🔶 78%  |
-| Session List             | `/session`                             |    22    |   14    | 🔶 64%  |
-| Session Launcher         | `/session/start`                       |    14    |    3    | 🔶 21%  |
-| Serving                  | `/serving`                             |    7     |    2    | 🔶 29%  |
-| Endpoint Detail          | `/serving/:serviceId`                  |    20    |    9    | 🔶 45%  |
-| Service Launcher         | `/service/start`                       |    5     |    1    | 🔶 20%  |
-| VFolder / Data           | `/data`                                |    48    |   35    | 🔶 73%  |
-| Model Store              | `/model-store`                         |    6     |    6    | ✅ 100% |
-| Admin Model Store        | `/admin-model-store`                   |    28    |   28    | ✅ 100% |
-| Storage Host             | `/storage-settings/:hostname`          |    3     |    0    |  ❌ 0%  |
-| My Environment           | `/my-environment`                      |    2     |    2    | ✅ 100% |
-| Environment              | `/environment`                         |    27    |   21    | 🔶 78%  |
-| Configurations           | `/settings`                            |    11    |    9    | 🔶 82%  |
-| Resources                | `/agent-summary`, `/agent`             |    10    |    3    | 🔶 30%  |
-| Resource Policy          | `/resource-policy`                     |    13    |   10    | 🔶 77%  |
-| User Credentials         | `/credential`                          |    22    |   15    | 🔶 68%  |
-| Maintenance              | `/maintenance`                         |    3     |    2    | 🔶 67%  |
-| User Settings            | `/usersettings`                        |    10    |    1    | 🔶 10%  |
-| Project                  | `/project`                             |    6     |    5    | 🔶 83%  |
-| Statistics               | `/statistics`                          |    2     |    2    | ✅ 100% |
-| Scheduler                | `/scheduler`                           |    6     |    0    |  ❌ 0%  |
-| Information              | `/information`                         |    2     |    2    | ✅ 100% |
-| Reservoir                | `/reservoir`, `/reservoir/:artifactId` |    18    |    0    |  ❌ 0%  |
-| Branding                 | `/branding`                            |    14    |    0    |  ❌ 0%  |
-| App Launcher             | (modal)                                |    19    |   11    | 🔶 58%  |
-| Chat                     | `/chat/:id?`                           |    7     |    7    | ✅ 100% |
-| Plugin System            | (config-based)                         |    12    |   12    | ✅ 100% |
-| RBAC Management          | `/rbac`                                |    22    |   21    | 🔶 95%  |
-| Auto Scaling Rule Preset | `/admin-serving?tab=auto-scaling-rule` |    33    |   32    | 🔶 97%  |
-| Deployments              | `/deployments`, `/deployments/:id`     |    16    |   12    | 🔶 75%  |
-| **Total**                |                                        | **470**  | **321** | **68%** |
+| Page                     | Route                                       | Features | Covered | Status  |
+| ------------------------ | ------------------------------------------- | :------: | :-----: | :-----: |
+| Authentication           | `/interactive-login`                        |    37    |   35    | 🔶 95%  |
+| Change Password          | `/change-password`                          |    9     |    9    | ✅ 100% |
+| Start Page               | `/start`                                    |    8     |    6    | 🔶 75%  |
+| Dashboard                | `/dashboard`                                |    9     |    7    | 🔶 78%  |
+| Session List             | `/session`                                  |    22    |   14    | 🔶 64%  |
+| Session Launcher         | `/session/start`                            |    14    |    3    | 🔶 21%  |
+| Serving                  | `/serving`                                  |    7     |    2    | 🔶 29%  |
+| Endpoint Detail          | `/serving/:serviceId`                       |    20    |    9    | 🔶 45%  |
+| Service Launcher         | `/service/start`                            |    5     |    1    | 🔶 20%  |
+| VFolder / Data           | `/data`                                     |    48    |   35    | 🔶 73%  |
+| Model Store              | `/model-store`                              |    6     |    6    | ✅ 100% |
+| Admin Model Store        | `/admin-model-store`                        |    28    |   28    | ✅ 100% |
+| Storage Host             | `/storage-settings/:hostname`               |    3     |    0    |  ❌ 0%  |
+| My Environment           | `/my-environment`                           |    2     |    2    | ✅ 100% |
+| Environment              | `/environment`                              |    27    |   21    | 🔶 78%  |
+| Configurations           | `/settings`                                 |    11    |    9    | 🔶 82%  |
+| Resources                | `/agent-summary`, `/agent`                  |    10    |    3    | 🔶 30%  |
+| Resource Policy          | `/resource-policy`                          |    13    |   10    | 🔶 77%  |
+| User Credentials         | `/credential`                               |    22    |   15    | 🔶 68%  |
+| Maintenance              | `/maintenance`                              |    3     |    2    | 🔶 67%  |
+| User Settings            | `/usersettings`                             |    10    |    1    | 🔶 10%  |
+| Project                  | `/project`                                  |    6     |    5    | 🔶 83%  |
+| Statistics               | `/statistics`                               |    2     |    2    | ✅ 100% |
+| Scheduler                | `/scheduler`                                |    6     |    0    |  ❌ 0%  |
+| Information              | `/information`                              |    2     |    2    | ✅ 100% |
+| Reservoir                | `/reservoir`, `/reservoir/:artifactId`      |    18    |    0    |  ❌ 0%  |
+| Branding                 | `/branding`                                 |    14    |    0    |  ❌ 0%  |
+| App Launcher             | (modal)                                     |    19    |   11    | 🔶 58%  |
+| Chat                     | `/chat/:id?`                                |    7     |    7    | ✅ 100% |
+| Plugin System            | (config-based)                              |    12    |   12    | ✅ 100% |
+| RBAC Management          | `/rbac`                                     |    22    |   21    | 🔶 95%  |
+| Auto Scaling Rule Preset | `/admin-serving?tab=auto-scaling-rule`      |    33    |   32    | 🔶 97%  |
+| Deployments              | `/deployments`, `/deployments/:id`          |    17    |   14    | 🔶 82%  |
+| Admin Deployment Preset  | `/admin/deployments/deployment-presets/new` |    3     |    3    | ✅ 100% |
+| **Total**                |                                             | **474**  | **326** | **69%** |
 
 ---
 
@@ -308,32 +309,52 @@
 
 **Modal:** `DeploymentAddRevisionModal` (Advanced/Custom mode)
 
-| Feature                                                                                            | Status | Test                                                                                                            |
-| -------------------------------------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------- |
-| Manual image name accepted → revision mutation carries resolved id (FR-3278)                       | ✅     | `a manually entered image is accepted and submitted as a resolved image`                                        |
-| Custom-mode Start Command: Execution (Shell/Exec) + Shell input appear only in Advanced (FR-3205)  | ✅     | `Admin sees Execution and Shell controls only after switching the command to Advanced mode`                     |
-| Start Command is optional — empty submit reaches the mutation (FR-3205)                            | ✅     | `Admin can add a revision with an empty Start Command (the command is optional)`                                |
-| Raw command sent verbatim (no tokenization) + shell omitted in Basic mode (FR-3205)                | ✅     | `Admin submits the raw command verbatim and omits shell in Basic mode`                                          |
-| Advanced Shell mode submits `shell` = the chosen shell binary (FR-3205)                            | ✅     | `Admin submits shell = the chosen shell binary when Advanced Shell mode overrides it`                           |
-| Advanced Exec mode submits `shell` = null (FR-3205)                                                | ✅     | `Admin submits shell = null in Advanced Exec mode`                                                              |
-| Advanced Shell left unchanged submits the default shell `/bin/bash` (FR-3205)                      | ✅     | `Admin submits shell = /bin/bash (the default) when Advanced Shell mode is left unchanged`                      |
-| Model Definition File Path restored under Advanced Settings, optional (FR-3205)                    | ✅     | `Admin finds the restored Model Definition File Path under Advanced Settings`                                   |
-| Config-reading variant shows Service Configuration; hides runtime-parameter presets (FR-3342)      | ✅     | `Admin sees the Service Configuration section for a config-reading variant (custom)`                            |
-| Non-config-reading variant shows runtime presets + default-command warning note (FR-3342)          | ✅     | `Admin sees runtime-parameter presets and the default-command note for a non-config-reading variant (vllm)`     |
-| DB `defaultModelDefinition` drives command / port / health-check placeholders (FR-3342)            | ✅     | `Admin sees the variant defaultModelDefinition fill the command / port / health-check placeholders`             |
-| vfolder `model-definition.yaml` overrides DB-default placeholders (two-layer precedence) (FR-3342) | ✅     | `Admin sees a selected model folder’s model-definition.yaml override the DB-default … placeholders`             |
-| Model Definition File Path value does not feed back into the command placeholder (FR-3342)         | ✅     | `Admin sees the Model Definition File Path leave the command placeholder unchanged`                             |
-| Model Definition File Path hidden for a non-config-reading variant (FR-3342)                       | ✅     | asserted inside `… default-command note for a non-config-reading variant (vllm)`                                |
-| Old-manager name-based `readsVfolderConfigFiles` fallback (prefill path)                           | ⏸️     | `test.fixme` — unreachable from a fresh variant select; deferred to a full DeploymentDetailPageQuery mock       |
-| Command prefill suppressed when the source revision's variant does not read config files (FR-3342) | ⏸️     | same prefill path as the row above — needs the deferred `DeploymentDetailPageQuery` mock                        |
-| `definitionPath` sent as null for a non-config-reading variant (FR-3342)                           | ⏸️     | submit-path guard; the field is unreachable in the UI for those variants, so only the mutation payload shows it |
+| Feature                                                                                                                                                                                                                            | Status | Test                                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Manual image name accepted → revision mutation carries resolved id (FR-3278)                                                                                                                                                       | ✅     | `a manually entered image is accepted and submitted as a resolved image`                                                              |
+| Custom-mode Start Command: Execution (Shell/Exec) + Shell input appear immediately, no Basic/Advanced toggle (FR-3205; toggle removed per devops feedback, 2026-08-07)                                                             | ✅     | `Admin sees Execution and Shell controls immediately, and Exec hides Shell`                                                           |
+| Start Command is optional — empty submit reaches the mutation (FR-3205)                                                                                                                                                            | ✅     | `Admin can add a revision with an empty Start Command (the command is optional)`                                                      |
+| Raw command sent verbatim (no tokenization), shell = `/bin/bash` by default when left unchanged (FR-3205)                                                                                                                          | ✅     | `Admin submits the raw command verbatim, with shell = /bin/bash (the default) when left unchanged`                                    |
+| Shell mode submits `shell` = the chosen shell binary (FR-3205)                                                                                                                                                                     | ✅     | `Admin submits shell = the chosen shell binary when Shell mode overrides the default`                                                 |
+| Exec mode submits `shell` = null (FR-3205)                                                                                                                                                                                         | ✅     | `Admin submits shell = null in Exec mode`                                                                                             |
+| Model Definition File Path restored under Advanced Settings, optional (FR-3205)                                                                                                                                                    | ✅     | `Admin finds the restored Model Definition File Path under Advanced Settings`                                                         |
+| Config-reading variant shows Service Configuration; hides runtime-parameter presets (FR-3342)                                                                                                                                      | ✅     | `Admin sees the Service Configuration section for a config-reading variant (custom)`                                                  |
+| Non-config-reading variant shows runtime presets + default-command warning note (FR-3342)                                                                                                                                          | ✅     | `Admin sees runtime-parameter presets and the default-command note for a non-config-reading variant (vllm)`                           |
+| DB `defaultModelDefinition` drives command / port / health-check placeholders (FR-3342)                                                                                                                                            | ✅     | `Admin sees the variant defaultModelDefinition fill the command / port / health-check placeholders`                                   |
+| vfolder `model-definition.yaml` overrides DB-default placeholders (two-layer precedence) (FR-3342)                                                                                                                                 | ✅     | `Admin sees a selected model folder’s model-definition.yaml override the DB-default … placeholders`                                   |
+| Partial vfolder `model-definition.yaml` overrides only its defined fields; the rest fall back to the DB baseline field-by-field (FR-3342)                                                                                          | ✅     | `Admin sees a partial model-definition.yaml override only the fields it defines, falling back to the DB baseline for the rest`        |
+| Model Definition File Path value does not feed back into the command placeholder (FR-3342)                                                                                                                                         | ✅     | `Admin sees the Model Definition File Path leave the command placeholder unchanged`                                                   |
+| Model Definition File Path hidden for a non-config-reading variant (FR-3342)                                                                                                                                                       | ✅     | asserted inside `… default-command note for a non-config-reading variant (vllm)`                                                      |
+| Old-manager name-based `readsVfolderConfigFiles` fallback, reachable from a fresh variant select — `BAIRuntimeVariantSelect` resolves the omitted flag via `?? name === 'custom'` before the modal ever sees `undefined` (FR-3342) | ✅     | `Admin sees the custom service config for an old-manager variant (readsVfolderConfigFiles omitted, name === custom)`                  |
+| Old-manager name-based `readsVfolderConfigFiles` fallback via the "Load current revision" prefill path                                                                                                                             | ⏸️     | deferred — needs a full `DeploymentDetailPageQuery` mock with a `currentRevision` whose variant name is `custom` and the flag omitted |
+| Command prefill suppressed when the source revision's variant does not read config files (FR-3342)                                                                                                                                 | ⏸️     | same prefill path as the row above — needs the deferred `DeploymentDetailPageQuery` mock                                              |
+| `definitionPath` sent as null for a non-config-reading variant (FR-3342)                                                                                                                                                           | ⏸️     | submit-path guard; the field is unreachable in the UI for those variants, so only the mutation payload shows it                       |
 
-**Coverage: ✅ 13 features (FR-3278 regression guard + FR-3205 Start Command redesign + FR-3342 runtime-variant defaults); 3 deferred**
+**Coverage: ✅ 15 features (FR-3278 regression guard + FR-3205 Start Command redesign + FR-3342 runtime-variant defaults); 3 deferred**
 
 > The FR-3205 preset-side change (the Admin Deployment Preset form no longer coerces
-> Basic mode's `shell` to the client default) is **not** covered here — these specs
-> drive the deployment Add Revision modal, not the preset editor. It needs its own
-> spec under an Admin Deployment Preset suite.
+> Basic mode's `shell` to the client default) has its own suite — see
+> "7c. Admin Deployment Preset — Service Configuration" below.
+
+---
+
+### 7c. Admin Deployment Preset — Service Configuration (`/admin/deployments/deployment-presets/new`)
+
+**Test files:**
+
+- [`e2e/serving/admin-preset-service-config.spec.ts`](serving/admin-preset-service-config.spec.ts) (hybrid mock — real login + navigation to the create-preset wizard, page-internal GraphQL stubbed by operation name; FR-3474)
+
+**Shared mocks:** [`e2e/serving/mocking/admin-preset-mock.ts`](serving/mocking/admin-preset-mock.ts)
+
+**Page:** `AdminDeploymentPresetSettingPageContent` (create-preset wizard, Basic Info step)
+
+| Feature                                                                                                                                                                                                                            | Status | Test                                                                                                                       |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------- |
+| Service Configuration shown for a config-reading variant; Start Command / Port optional (BA-6613); Execution/Shell always visible, no Basic/Advanced toggle; Shell pre-filled with the backend default; Exec hides Shell (FR-3474) | ✅     | `Admin sees Service Configuration is optional, Execution/Shell always visible with Shell pre-filled, and Exec hides Shell` |
+| Full Create submission carries Service Configuration / Health Check / Pre-Start Actions in the expected nested `modelDefinition.models[0].service` shape (FR-3474)                                                                 | ✅     | `Admin creates a preset carrying Service Configuration, Health Check, and a Pre-Start Action`                              |
+| Leaving Start Command and Port blank still submits successfully — `command` omitted, `port` falls back to the submit-mapping layer's default (FR-3474/BA-6613)                                                                     | ✅     | `Admin creates a preset with Start Command and Port left blank`                                                            |
+
+**Coverage: ✅ 3 features**
 
 ---
 
