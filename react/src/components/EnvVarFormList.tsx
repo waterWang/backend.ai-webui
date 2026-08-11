@@ -2,20 +2,18 @@
  @license
  Copyright (c) 2015-2026 Lablup Inc. All rights reserved.
  */
-import { MinusCircleOutlined } from '@ant-design/icons';
 import {
-  AutoComplete,
   Form,
   FormInstance,
   FormItemProps,
-  Input,
-  InputRef,
-} from 'antd';
-import { FormListProps } from 'antd/lib/form';
+  FormListProps,
+} from '../form-engine';
+import { AstryxFormTextInput } from './astryxFormControls';
+import { DropdownMenu } from '@astryxdesign/core/DropdownMenu';
 import { BAIButton, BAIFlex } from 'backend.ai-ui';
 import * as _ from 'lodash-es';
-import { PlusIcon } from 'lucide-react';
-import React, { useRef } from 'react';
+import { CircleMinus, PlusIcon, SparklesIcon } from 'lucide-react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 export interface EnvVarConfig {
@@ -25,19 +23,46 @@ export interface EnvVarConfig {
   description?: string;
 }
 
-// The value input's placeholder depends on the sibling `variable` field.
-// `Form.Item`'s `dependencies` re-renders the *Field* itself, but the
-// `<Input placeholder={...}>` element is still the same static element
-// created on the last outer render, so its placeholder prop wouldn't pick
-// up the new variable — `Form.useWatch` is what actually makes it reactive.
-const EnvVarValueInput: React.FC<{
-  form: FormInstance;
-  variableNamePath: Parameters<FormInstance['getFieldValue']>[0];
-  getPlaceholderForVariable: (variable: string) => string;
-}> = ({ form, variableNamePath, getPlaceholderForVariable }) => {
+/**
+ * The value input's placeholder depends on the SIBLING `variable` field.
+ *
+ * `Form.Item`'s `dependencies` re-renders the *Field*, but the
+ * `<AstryxFormTextInput placeholder={…}>` element it renders is still the same
+ * static element object created on the last OUTER render, so a placeholder
+ * computed inline from `form.getFieldValue(...)` never updates — the field the
+ * user just typed into keeps showing the generic hint. `Form.useWatch`
+ * subscribes this leaf component to the sibling field, which is what actually
+ * makes the placeholder reactive.
+ *
+ * `value` / `onChange` are injected by the enclosing `Form.Item` and forwarded
+ * through `...controlProps`.
+ */
+const EnvVarValueInput: React.FC<
+  {
+    form: FormInstance;
+    variableNamePath: Parameters<FormInstance['getFieldValue']>[0];
+    getPlaceholderForVariable: (variable: string) => string;
+    label: string;
+  } & Omit<
+    React.ComponentProps<typeof AstryxFormTextInput>,
+    'label' | 'placeholder'
+  >
+> = ({
+  form,
+  variableNamePath,
+  getPlaceholderForVariable,
+  label,
+  ...controlProps
+}) => {
   'use memo';
   const variable = Form.useWatch(variableNamePath, form);
-  return <Input placeholder={getPlaceholderForVariable(variable)} />;
+  return (
+    <AstryxFormTextInput
+      {...controlProps}
+      label={label}
+      placeholder={getPlaceholderForVariable(variable)}
+    />
+  );
 };
 
 interface EnvVarFormListProps extends Omit<FormListProps, 'children'> {
@@ -58,8 +83,6 @@ const EnvVarFormList: React.FC<EnvVarFormListProps> = ({
 }) => {
   'use memo';
   const { rules: externalRules, ...restFormItemProps } = formItemProps || {};
-  const inputRef = useRef<InputRef>(null);
-  const autoCompleteRef = useRef<React.ComponentRef<typeof AutoComplete>>(null);
   const { t } = useTranslation();
   const form = Form.useFormInstance();
 
@@ -87,7 +110,29 @@ const EnvVarFormList: React.FC<EnvVarFormListProps> = ({
     );
   };
 
-  const getAutoCompleteOptions = () => {
+  /**
+   * The still-unused suggested variable names, in `optionalEnvVars` then
+   * `requiredEnvVars` order.
+   *
+   * HISTORY — this fed an antd `AutoComplete` dropdown before the Astryx
+   * migration. MAPPING §3.15 gives free-text `AutoComplete` no Astryx
+   * destination and free text is mandatory here (the whole point of the field
+   * is arbitrary env var names), so W2A-3 dropped the popup and joined these
+   * names into the field's PLACEHOLDER instead. That degrades badly once a
+   * caller passes more than two or three: `useCommonEnvVarConfigs` supplies
+   * eight, which renders as a comma-joined run of ~90 characters truncated
+   * inside a half-width field — discoverable in principle, unreadable in
+   * practice.
+   *
+   * They now drive the `DropdownMenu` next to the add button instead: picking
+   * one appends a row with `variable` pre-filled, so the name never has to be
+   * typed from memory. The text field stays a plain `TextInput`, so arbitrary
+   * names are untouched — which is the constraint that ruled out `Typeahead`
+   * in the first place. `BaseTypeahead` cannot stand in either: its query is
+   * uncontrolled internal state that it clears on select, so it cannot hold a
+   * form-controlled free-text value.
+   */
+  const getSuggestedVariableNames = () => {
     const currentValues = form.getFieldValue(props.name) || [];
     const usedVariables = _.map(
       _.filter(
@@ -108,10 +153,7 @@ const EnvVarFormList: React.FC<EnvVarFormListProps> = ({
           !!env.variable &&
           !_.includes(usedVariables, env.variable),
       ),
-      (env) => ({
-        value: env.variable,
-        label: env.variable,
-      }),
+      (env) => env.variable,
     );
   };
 
@@ -152,9 +194,12 @@ const EnvVarFormList: React.FC<EnvVarFormListProps> = ({
       ]}
     >
       {(fields, { add, remove }, { errors }) => {
+        // Recomputed per render of this list — `fields` changes whenever a row
+        // is added or removed, so the menu drops names as they get used.
+        const suggestedVariableNames = getSuggestedVariableNames();
         return (
           <BAIFlex direction="column" gap="xs" align="stretch">
-            {fields.map(({ key, name, ...restField }, index) => (
+            {fields.map(({ key, name, ...restField }) => (
               <BAIFlex key={key} direction="row" align="baseline" gap="xs">
                 <Form.Item
                   {...restField}
@@ -199,39 +244,18 @@ const EnvVarFormList: React.FC<EnvVarFormListProps> = ({
                   ]}
                   {...restFormItemProps}
                 >
-                  {optionalEnvVars && getAutoCompleteOptions().length > 0 ? (
-                    <AutoComplete
-                      ref={index === fields.length - 1 ? autoCompleteRef : null}
-                      placeholder={t('session.launcher.EnvironmentVariable')}
-                      options={getAutoCompleteOptions()}
-                      onChange={() => {
-                        const fieldNames = fields.map((_field, index) => [
-                          props.name,
-                          index,
-                          'variable',
-                        ]);
-                        form.validateFields(fieldNames);
-                      }}
-                      filterOption={(inputValue, option) =>
-                        option?.value
-                          ?.toLowerCase()
-                          .indexOf(inputValue.toLowerCase()) !== -1
-                      }
-                    />
-                  ) : (
-                    <Input
-                      ref={index === fields.length - 1 ? inputRef : null}
-                      placeholder={t('session.launcher.EnvironmentVariable')}
-                      onChange={() => {
-                        const fieldNames = fields.map((_field, index) => [
-                          props.name,
-                          index,
-                          'variable',
-                        ]);
-                        form.validateFields(fieldNames);
-                      }}
-                    />
-                  )}
+                  <AstryxFormTextInput
+                    label={t('session.launcher.EnvironmentVariable')}
+                    placeholder={t('session.launcher.EnvironmentVariable')}
+                    onChange={() => {
+                      const fieldNames = fields.map((_field, fieldIndex) => [
+                        props.name,
+                        fieldIndex,
+                        'variable',
+                      ]);
+                      form.validateFields(fieldNames);
+                    }}
+                  />
                 </Form.Item>
                 <Form.Item
                   {...restField}
@@ -251,29 +275,54 @@ const EnvVarFormList: React.FC<EnvVarFormListProps> = ({
                     form={form}
                     variableNamePath={[props.name, name, 'variable']}
                     getPlaceholderForVariable={getPlaceholderForVariable}
+                    label={t('session.launcher.EnvironmentVariableValue')}
                   />
                 </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
+                <CircleMinus size="1em" onClick={() => remove(name)} />
               </BAIFlex>
             ))}
             <Form.Item noStyle>
-              <BAIButton
-                type="dashed"
-                onClick={() => {
-                  add();
-                  setTimeout(() => {
-                    // Whichever branch the newest row renders as (plain
-                    // Input, or AutoComplete once `optionalEnvVars` is
-                    // set) — only one ref is ever populated at a time.
-                    inputRef.current?.focus();
-                    autoCompleteRef.current?.focus();
-                  }, 0);
-                }}
-                icon={<PlusIcon />}
-                block
-              >
-                {t('session.launcher.AddEnvironmentVariable')}
-              </BAIButton>
+              <BAIFlex direction="row" gap="xs" align="stretch">
+                <BAIButton
+                  type="dashed"
+                  // PILOT-DECISION: the antd `InputRef.focus()` that jumped the
+                  // caret into the row just added is DROPPED. Astryx uses a
+                  // `handleRef` convention rather than `ref` + `InputRef`
+                  // (MAPPING §6.2) and `AstryxFormTextInput` exposes no ref
+                  // slot; the same call was already made for the select stack
+                  // (P26-8).
+                  onClick={() => {
+                    add();
+                  }}
+                  icon={<PlusIcon />}
+                  block
+                >
+                  {t('session.launcher.AddEnvironmentVariable')}
+                </BAIButton>
+                {suggestedVariableNames.length > 0 ? (
+                  <DropdownMenu
+                    button={{
+                      icon: <SparklesIcon size="1em" />,
+                      isIconOnly: true,
+                      label: t(
+                        'session.launcher.AddSuggestedEnvironmentVariable',
+                      ),
+                      variant: 'secondary',
+                    }}
+                    hasChevron={false}
+                    alignment="end"
+                    items={_.map(suggestedVariableNames, (variable) => ({
+                      label: variable,
+                      // Appending with `variable` pre-filled is what replaces
+                      // the old type-to-filter dropdown. The name is already
+                      // known to be unused (`getSuggestedVariableNames`
+                      // excludes the ones in the list), so this cannot create
+                      // the duplicate the `variable` rule guards against.
+                      onClick: () => add({ variable, value: '' }),
+                    }))}
+                  />
+                ) : null}
+              </BAIFlex>
             </Form.Item>
             <Form.ErrorList errors={errors} />
           </BAIFlex>
