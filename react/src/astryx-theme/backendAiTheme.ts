@@ -64,7 +64,7 @@ import { ANTD_ALIGN_TOKENS, ANTD_DARK_ALGORITHM_OUTPUT } from 'backend.ai-ui';
 export { ANTD_ALIGN_TOKENS, ANTD_DARK_ALGORITHM_OUTPUT };
 
 /** Bump when the static recipe (align tokens, formulas) changes. */
-export const THEME_NAME_REV = 10;
+export const THEME_NAME_REV = 11;
 
 /**
  * NEUTRAL BACKGROUND FAMILY — pinned to the measured legacy antd values.
@@ -710,6 +710,39 @@ const ANTD_DROPDOWN_DENSITY = {
  * i.e. the same hue, one perceptual step short of antd's lift — against a
  * previous state that dropped the hue entirely in dark.
  */
+/**
+ * COMPLEX-SELECTOR FIELD DENSITY — make `ComplexSelector` triggers the same
+ * height as every other md field (FR-3476 QA: the Runtime Variant select sat
+ * 40px tall next to 32px `Selector`/`TextInput` fields in the same form).
+ *
+ * ## The mechanism (measured live, Astryx 0.3.0 source confirmed)
+ *
+ * - `Selector`/`TextInput` md set a FIXED `height: var(--size-element-md)`
+ *   (32px) on the trigger, so `paddingBlock: var(--spacing-2)` (8px) cannot
+ *   grow them.
+ * - `ComplexSelector` sets only `minHeight: var(--size-element-md)` (its
+ *   trigger may host wrapping token chips), so the same 8px paddingBlock plus
+ *   the 22px single-line label lands at 40px — 8px taller than every
+ *   neighbouring field, selected or not.
+ *
+ * ## The fix
+ *
+ * Shrink the trigger's block padding to `--spacing-1` (4px): a single-line
+ * trigger computes to 4+22+4 + 2px border = 32px, exactly `minHeight`, so it
+ * aligns with `Selector` md. Multi-line trigger content (the `'badges'`
+ * display of `BAIComplexSelect`) still grows past `minHeight` as designed —
+ * a fixed `height` here would clip it, which is why padding, not height, is
+ * the knob. sm stays visually 32px (the 22px line already exceeds
+ * `--size-element-sm`); lg still rides its 40px `minHeight`.
+ */
+const COMPLEX_SELECTOR_FIELD_DENSITY = {
+  'complex-selector': {
+    base: {
+      paddingBlock: 'var(--spacing-1)',
+    },
+  },
+};
+
 const ANTD_HOVER_PARITY = {
   // antd `colorBgSpotlight` — the tooltip bubble is DARK in both schemes, with
   // `colorTextLightSolid` (#fff) copy. Astryx instead inverts against the app
@@ -993,6 +1026,7 @@ export function buildBackendAiTheme(
       ...ANTD_DIALOG_SURFACE,
       ...ANTD_DROPDOWN_DENSITY,
       ...ANTD_HOVER_PARITY,
+      ...COMPLEX_SELECTOR_FIELD_DENSITY,
     },
   });
 
