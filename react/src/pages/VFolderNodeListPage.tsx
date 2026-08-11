@@ -40,7 +40,13 @@ import {
 import * as _ from 'lodash-es';
 import { RotateCcwIcon } from 'lucide-react';
 import { parseAsString, useQueryState, useQueryStates } from 'nuqs';
-import React, { useDeferredValue, useEffect, useRef, useState } from 'react';
+import React, {
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { graphql, useLazyLoadQuery } from 'react-relay';
 
@@ -167,23 +173,39 @@ const VFolderNodeListPage: React.FC<VFolderNodeListPageProps> = ({
 
   const [fetchKey, updateFetchKey] = useUpdatableState('initial-fetch');
 
-  const queryVariables: VFolderNodeListPageQuery$variables = {
-    scopeId: `project:${currentProject.id}`,
-    offset: baiPaginationOption.offset,
-    first: baiPaginationOption.first,
-    filter: mergeFilterValues([
-      queryParams.statusCategory === 'active' ||
-      queryParams.statusCategory === undefined
-        ? FILTER_BY_STATUS_CATEGORY['active']
-        : FILTER_BY_STATUS_CATEGORY['deleted'],
+  // Memoize so the object identity only changes when the query actually
+  // depends on something that changed. Otherwise every render (including
+  // unrelated state flips like row selection) builds a fresh object, making
+  // `useDeferredValue(queryVariables) !== queryVariables` true on every pass
+  // and flashing the fetch-key button into its loading state (FR-3510, #8684).
+  const queryVariables: VFolderNodeListPageQuery$variables = useMemo(
+    () => ({
+      scopeId: `project:${currentProject.id}`,
+      offset: baiPaginationOption.offset,
+      first: baiPaginationOption.first,
+      filter: mergeFilterValues([
+        queryParams.statusCategory === 'active' ||
+        queryParams.statusCategory === undefined
+          ? FILTER_BY_STATUS_CATEGORY['active']
+          : FILTER_BY_STATUS_CATEGORY['deleted'],
+        queryParams.filter,
+        usageModeFilter,
+      ]),
+      order: queryParams.order,
+      permission: 'read_attribute',
+      filterForActiveCount: FILTER_BY_STATUS_CATEGORY['active'],
+      filterForDeletedCount: FILTER_BY_STATUS_CATEGORY['deleted'],
+    }),
+    [
+      currentProject.id,
+      baiPaginationOption.offset,
+      baiPaginationOption.first,
+      queryParams.statusCategory,
       queryParams.filter,
+      queryParams.order,
       usageModeFilter,
-    ]),
-    order: queryParams.order,
-    permission: 'read_attribute',
-    filterForActiveCount: FILTER_BY_STATUS_CATEGORY['active'],
-    filterForDeletedCount: FILTER_BY_STATUS_CATEGORY['deleted'],
-  };
+    ],
+  );
   const deferredQueryVariables = useDeferredValue(queryVariables);
   const deferredFetchKey = useDeferredValue(fetchKey);
 
